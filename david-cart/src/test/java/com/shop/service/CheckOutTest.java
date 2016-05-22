@@ -33,6 +33,14 @@ public class CheckOutTest {
 		assertEquals(expected, result);
 	}
 	
+	@Test
+	public void testCalculateTotoalCostWithNoOffers(){
+		CheckOut checkOut = new CheckOutImp();
+		List<String> purchasedProducts = Arrays.asList("Apple","Apple","Orange","Apple");
+		Double result = checkOut.calculateTotalCost(purchasedProducts,null); //If there is no offer policy, then it's null
+		Double expected = 2.05;
+		assertEquals(expected, result);
+	}
 	
 
 	public void tearDown(){
