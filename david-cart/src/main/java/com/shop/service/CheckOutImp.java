@@ -4,12 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.shop.service.offer.AppleOffer;
+import com.shop.service.offer.Offer;
+import com.shop.service.offer.OrangeOffer;
+
 public class CheckOutImp implements CheckOut {
 
-	public Double calculateTotalCost(List<String> purchasedProducts) {
+	@Override
+	public Double calculateTotalCost(List<String> purchasedProducts, Map<String, Offer> offers) {
 		Double totalCost = 0.0;
 		Map<String, Integer>purchasedProductMap = new ConcurrentHashMap<>();
-		
+				
 		for(String productItem : purchasedProducts){
 			switch(productItem){
 			case "Apple":	
@@ -34,18 +39,30 @@ public class CheckOutImp implements CheckOut {
 		
 		for(Map.Entry<String, Integer> entry : purchasedProductMap.entrySet()){
 			switch(entry.getKey()){
-			case "Apple":				
-				totalCost = totalCost+entry.getValue()* ProductOriginalPrice.Apple;				
+			case "Apple":			
+				if(offers!= null && offers.containsKey(entry.getKey())){
+					totalCost = totalCost + new AppleOffer().offerPolicy(entry.getValue());
+				}else{
+					totalCost = totalCost+entry.getValue()* ProductOriginalPrice.Apple;
+				}
 				break;
 			case "Orange":
-			    totalCost = totalCost+entry.getValue()*ProductOriginalPrice.Orange;
-				break;			
+				if(offers!= null && offers.containsKey(entry.getKey())){
+					totalCost=totalCost + new OrangeOffer().offerPolicy(entry.getValue());
+				}else {
+				    totalCost = totalCost+entry.getValue()*ProductOriginalPrice.Orange;
+				}
+				break;
+			
 			}
 		}
 		
-		
-		
 		return totalCost;
+		
+		
+
 	}
+
+
 
 }
